@@ -48,7 +48,10 @@ fun App() {
 
                 Button(onClick = {
                     showContent = !showContent
-                    Napier.i("Кнопку натиснуто. Стан: $showContent", tag = "LAB8_LOG")
+                    if (showContent) {
+                        aboutViewModel.incrementCounterInUi()
+                    }
+                    Napier.i("Кнопку натиснуто. Стан: $showContent", tag = "LAB9_LOG")
                 }) {
                     Text("Click me!")
                 }
@@ -60,15 +63,20 @@ fun App() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         androidx.compose.foundation.Image(painterResource(Res.drawable.compose_multiplatform), null)
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
+
                         Text(
-                            text = "Compose: $greeting",
-                            style = MaterialTheme.typography.bodyLarge
+                            text = "Кількість відкриттів екрана: ${state.openCount}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.secondary
                         )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
                         Text(
-                            text = "Device Model: ${state.deviceModel}",
-                            modifier = Modifier.padding(top = 4.dp),
-                            style = MaterialTheme.typography.bodyMedium
+                            text = "Востаннє відкрито: ${state.lastOpenTime}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.outline
                         )
                     }
                 }

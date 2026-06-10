@@ -15,15 +15,22 @@ class AboutViewModel(private val repository: PlatformRepository) : ViewModel() {
         loadSystemInfo()
     }
 
+    fun incrementCounterInUi() {
+        repository.incrementOpenCount()
+        loadSystemInfo()
+    }
+
     private fun loadSystemInfo() {
-        Napier.d("AboutViewModel ініціалізовано через Koin 4.0.0", tag = "LAB8_LOG")
+        Napier.d("AboutViewModel: завантажуємо дані для Лаби 9", tag = "LAB9_LOG")
 
         val platform = repository.fetchSystemInfo()
 
         _uiState.value = AboutUiState(
             platformName = platform.name,
             osVersion = platform.osVersion,
-            deviceModel = platform.deviceModel
+            deviceModel = platform.deviceModel,
+            openCount = repository.getOpenCount(),
+            lastOpenTime = repository.getLastOpenTime()
         )
     }
 }
