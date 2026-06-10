@@ -1,7 +1,11 @@
 package com.bodnar.lab6
 
-class WasmPlatform: Platform {
-    override val name: String = "Web with Kotlin/Wasm"
+import kotlinx.browser.window
+
+class WebPlatform : Platform {
+    override val name: String = "Web Browser"
+    override val osVersion: String = window.navigator.userAgent.take(40) + "..."
+    override val deviceModel: String = window.navigator.platform
 }
 
-actual fun getPlatform(): Platform = WasmPlatform()
+actual fun getPlatform(): Platform = WebPlatform()

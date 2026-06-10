@@ -15,15 +15,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.resources.painterResource
-
+import com.bodnar.lab6.ui.theme.AppTheme
 import lab6.shared.generated.resources.Res
 import lab6.shared.generated.resources.compose_multiplatform
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    AppTheme {
+        remember { Napier.base(DebugAntilog()) }
+
         var showContent by remember { mutableStateOf(false) }
+
+        val platform = remember { getPlatform() }
+
+        LaunchedEffect(platform) {
+            Napier.d("App started on platform: ${platform.name}, OS: ${platform.osVersion}", tag = "LAB6_LOG")
+        }
+
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primaryContainer)
@@ -31,7 +42,10 @@ fun App() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Button(onClick = { showContent = !showContent }) {
+            Button(onClick = {
+                showContent = !showContent
+                Napier.i("Button clicked! Current visibility state: $showContent", tag = "LAB6_LOG")
+            }) {
                 Text("Click me!")
             }
             AnimatedVisibility(showContent) {
