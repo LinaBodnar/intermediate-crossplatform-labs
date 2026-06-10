@@ -1,61 +1,73 @@
 package com.bodnar.lab6
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import com.bodnar.lab6.ui.theme.AppTheme
 import lab6.shared.generated.resources.Res
 import lab6.shared.generated.resources.compose_multiplatform
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-@Preview
-fun App() {
-    AppTheme {
-        remember { Napier.base(DebugAntilog()) }
+fun App(
+    aboutViewModel: AboutViewModel = viewModel { AboutViewModel() }
+) {
+    remember { Napier.base(DebugAntilog()) }
 
+    AppTheme {
         var showContent by remember { mutableStateOf(false) }
 
-        val platform = remember { getPlatform() }
-
-        LaunchedEffect(platform) {
-            Napier.d("App started on platform: ${platform.name}, OS: ${platform.osVersion}", tag = "LAB6_LOG")
-        }
+        val state by aboutViewModel.uiState.collectAsState()
 
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .safeContentPadding()
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Text(
+                text = "Platform: ${state.platformName} | OS: ${state.osVersion}",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(onClick = {
                 showContent = !showContent
-                Napier.i("Button clicked! Current visibility state: $showContent", tag = "LAB6_LOG")
+                Napier.i("Кнопку натиснуто. Стан видимості: $showContent", tag = "LAB7_LOG")
             }) {
                 Text("Click me!")
             }
+
             AnimatedVisibility(showContent) {
                 val greeting = remember { Greeting().greet() }
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+                    androidx.compose.foundation.Image(painterResource(Res.drawable.compose_multiplatform), null)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Compose: $greeting",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Device Model: ${state.deviceModel}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }
