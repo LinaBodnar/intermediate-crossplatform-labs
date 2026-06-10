@@ -21,7 +21,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.shared)
-
+            implementation("io.insert-koin:koin-core:4.0.0")
             implementation(libs.compose.ui)
         }
     }

@@ -16,58 +16,61 @@ import lab6.shared.generated.resources.Res
 import lab6.shared.generated.resources.compose_multiplatform
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.compose.KoinContext
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun App(
-    aboutViewModel: AboutViewModel = viewModel { AboutViewModel() }
-) {
+fun App() {
     remember { Napier.base(DebugAntilog()) }
 
-    AppTheme {
-        var showContent by remember { mutableStateOf(false) }
-
+    KoinContext {
+        val aboutViewModel: AboutViewModel = koinInject()
         val state by aboutViewModel.uiState.collectAsState()
+        AppTheme {
+            var showContent by remember { mutableStateOf(false) }
 
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = "Platform: ${state.platformName} | OS: ${state.osVersion}",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Column(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .safeContentPadding()
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "Platform: ${state.platformName} | OS: ${state.osVersion}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = {
-                showContent = !showContent
-                Napier.i("Кнопку натиснуто. Стан видимості: $showContent", tag = "LAB7_LOG")
-            }) {
-                Text("Click me!")
-            }
+                Button(onClick = {
+                    showContent = !showContent
+                    Napier.i("Кнопку натиснуто. Стан: $showContent", tag = "LAB8_LOG")
+                }) {
+                    Text("Click me!")
+                }
 
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    androidx.compose.foundation.Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Compose: $greeting",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = "Device Model: ${state.deviceModel}",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                AnimatedVisibility(showContent) {
+                    val greeting = remember { Greeting().greet() }
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        androidx.compose.foundation.Image(painterResource(Res.drawable.compose_multiplatform), null)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Compose: $greeting",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Text(
+                            text = "Device Model: ${state.deviceModel}",
+                            modifier = Modifier.padding(top = 4.dp),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
         }

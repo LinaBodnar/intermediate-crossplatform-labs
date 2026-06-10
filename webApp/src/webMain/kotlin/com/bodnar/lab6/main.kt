@@ -5,7 +5,14 @@ import androidx.compose.ui.window.ComposeViewport
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    ComposeViewport {
+    try {
+        org.koin.core.context.startKoin {
+            modules(appModule)
+        }
+    } catch (e: Exception) {
+    }
+
+    ComposeViewport("ComposeTarget") {
         App()
     }
 }

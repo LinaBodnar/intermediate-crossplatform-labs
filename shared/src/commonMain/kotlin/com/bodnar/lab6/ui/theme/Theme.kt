@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 private val LightColorScheme = lightColorScheme(
     primary = DarkGreen,
     secondary = LightForestGreen,
-    background = GreenBackground,          // Оновлюємо фон екрану
-    primaryContainer = LightGreenContainer // Оновлюємо фон контейнера екрану
+    background = GreenBackground,
+    primaryContainer = LightGreenContainer
 )
 
 @Composable

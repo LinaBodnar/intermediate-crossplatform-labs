@@ -6,10 +6,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import io.github.aakira.napier.Napier
 
-class AboutViewModel : ViewModel() {
-    
-    private val _uiState = MutableStateFlow(AboutUiState())
+class AboutViewModel(private val repository: PlatformRepository) : ViewModel() {
 
+    private val _uiState = MutableStateFlow(AboutUiState())
     val uiState: StateFlow<AboutUiState> = _uiState.asStateFlow()
 
     init {
@@ -17,9 +16,9 @@ class AboutViewModel : ViewModel() {
     }
 
     private fun loadSystemInfo() {
-        Napier.d("AboutViewModel ініціалізовано. Завантажуємо дані платформи.", tag = "LAB7_LOG")
+        Napier.d("AboutViewModel ініціалізовано через Koin 4.0.0", tag = "LAB8_LOG")
 
-        val platform = getPlatform()
+        val platform = repository.fetchSystemInfo()
 
         _uiState.value = AboutUiState(
             platformName = platform.name,

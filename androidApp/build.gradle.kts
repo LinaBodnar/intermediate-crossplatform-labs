@@ -13,7 +13,7 @@ kotlin {
 }
 dependencies {
     implementation(projects.shared)
-
+    implementation("io.insert-koin:koin-android:4.0.0")
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.compose.uiToolingPreview)
